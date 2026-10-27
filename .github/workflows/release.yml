@@ -47,6 +47,7 @@ jobs:
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v3
         with:
+          name: Discord Presence ${{ github.ref_name }}
           files: |
             build/libs/discordpresence-*.jar
           generate_release_notes: true
