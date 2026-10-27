@@ -1,0 +1,34 @@
+license="${mod_license}"
+issueTrackerURL="https://github.com/jumayusiii/minecraft-discord-presence/issues"
+displayURL="https://github.com/jumayusiii/minecraft-discord-presence"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+logoFile="discordpresence.png"
+description='''
+Shows what you are doing in Minecraft as a Discord Rich Presence: singleplayer or
+multiplayer, the server/world you are playing on and how many players are online.
+
+Fully configurable from NeoForge's Mods screen: enable or disable the presence and
+choose which details are shown, including the session timer.
+
+Client-side only, no Discord application setup required: the mod ships with its own
+application ID and works out of the box.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="CLIENT"

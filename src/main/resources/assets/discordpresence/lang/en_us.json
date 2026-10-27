@@ -1,0 +1,14 @@
+{
+  "discordpresence.configuration.title": "Discord Presence",
+  "discordpresence.configuration.section.discordpresence.client.toml": "Discord Presence",
+  "discordpresence.configuration.section.discordpresence.client.toml.title": "Discord Presence",
+  "discordpresence.configuration.enabled": "Enable Discord presence",
+  "discordpresence.configuration.largeImage": "Large image",
+  "discordpresence.configuration.smallImage": "Small image",
+  "discordpresence.configuration.showDimension": "Show dimension",
+  "discordpresence.configuration.showWorldName": "Show world/server name",
+  "discordpresence.configuration.showPlayerCount": "Show player count",
+  "discordpresence.configuration.showGameMode": "Show game mode",
+  "discordpresence.configuration.showSessionTime": "Show session timer",
+  "discordpresence.configuration.updateIntervalSeconds": "Update interval (seconds)"
+}

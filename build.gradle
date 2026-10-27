@@ -1,0 +1,95 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    withSourcesJar()
+}
+
+neoForge {
+    version = project.neo_version
+
+    runs {
+        client {
+            client()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+// The application ID is resolved once, at build time, and injected into the jar.
+// It is deliberately not exposed as a user-facing setting.
+def discordApplicationId = providers.gradleProperty('discordApplicationId')
+        .orElse(providers.environmentVariable('DISCORD_APPLICATION_ID'))
+        .getOrElse('')
+        .trim()
+
+if (!discordApplicationId.isEmpty() && !(discordApplicationId ==~ /\d{10,25}/)) {
+    throw new GradleException(
+            "discordApplicationId must be a numeric Discord application ID, got: ${discordApplicationId}"
+    )
+}
+
+tasks.named('processResources', ProcessResources) {
+    inputs.property('discordApplicationId', discordApplicationId)
+    filesMatching('discordpresence/application.properties') {
+        expand(discordApplicationId: discordApplicationId)
+    }
+}
+
+// Expand the placeholders in src/main/templates into the built resources.
+var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
+}
+
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+tasks.named('jar', Jar) {
+    manifest {
+        attributes(
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.version,
+                'Implementation-Vendor'   : mod_authors,
+        )
+    }
+    from('LICENSE') {
+        into 'META-INF'
+    }
+}
